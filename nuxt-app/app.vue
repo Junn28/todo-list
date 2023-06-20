@@ -1,35 +1,40 @@
 <script setup>
-const config = useAppConfig();
+const data = reactive({
+  tasks: [],
+  isCreating: false,
+  title: '',
+  description: '',
+})
 const vFocus = {
   mounted: (el) => el.focus(),
 };
 
 const addTask = () => {
   const task = {
-    title: config.title,
-    description: config.description,
+    title: data.title,
+    description: data.description,
     isDone: false,
   };
-  config.tasks.push(task);
-  config.isCreating = !config.isCreating;
-  config.title = '';
-  config.description = '';
+  data.tasks.push(task);
+  data.isCreating = !data.isCreating;
+  data.title = '';
+  data.description = '';
 };
 
 const deleteTask = (index) => {
-  config.tasks.splice(index, 1);
+  data.tasks.splice(index, 1);
 };
 
 const btnCancel = () => {
-  config.isCreating = !config.isCreating;
-  config.title = '';
-  config.description = '';
+  data.isCreating = !data.isCreating;
+  data.title = '';
+  data.description = '';
 };
 </script>
 
 <template>
   <header>
-    <nav class="navbar bg-body-tertiary">
+    <nav class="navbar bg-body-tertiary shadow-sm">
       <div class="container-fluid">
         <span class="navbar-brand mb-0 text-uppercase fw-bold fs-3">Todo List</span>
       </div>
@@ -37,7 +42,7 @@ const btnCancel = () => {
   </header>
 
   <div class="list-task">
-    <div v-if="config.tasks.length > 0" v-for="(task, index) in config.tasks" class="item-task d-flex align-items-start border-bottom pt-3 pb-4 ps-3" :key="index">
+    <div v-if="data.tasks.length > 0" v-for="(task, index) in data.tasks" class="item-task d-flex align-items-start border-bottom pt-3 pb-4 ps-3" :key="index">
       <input type="checkbox" name="status" id="task" class="align-self-center me-2" :checked="task.isDone" v-model="task.isDone" />
       <div class="d-flex flex-column ms-2 text-capitalize">
         <div class="title-task mb-1 fw-semibold" :class="task.isDone ? 'text-decoration-line-through' : ''">
@@ -49,17 +54,17 @@ const btnCancel = () => {
         <a href="#" class="btn-delete mt-1" @click="deleteTask(index)">Delete</a>
       </div>
     </div>
-    <p v-else class="fs-5 ms-2">Belum ada task</p>
+    <p v-else class="fs-5 ms-2 mt-2">Belum ada task</p>
   </div>
 
   <div class="action my-2">
-    <button class="btn btn-primary ms-2" v-if="!config.isCreating" @click="config.isCreating = !config.isCreating">Add Task</button>
+    <button class="btn btn-primary ms-2" v-if="!data.isCreating" @click="data.isCreating = !data.isCreating">Add Task</button>
     <div class="add-card" v-else>
       <div class="card mb-2 mx-2">
         <div class="card-body p-2">
           <h5 class="card-title">Tambahkan Task</h5>
-          <input v-focus v-model="config.title" class="form-control border-1" placeholder="Title" type="text" />
-          <textarea v-model="config.description" class="form-control border-1 small mt-2" placeholder="Description" rows="3"></textarea>
+          <input v-focus v-model="data.title" class="form-control border-1" placeholder="Title" type="text" />
+          <textarea v-model="data.description" class="form-control border-1 small mt-2" placeholder="Description" rows="3"></textarea>
         </div>
       </div>
       <div class="button-wrapper d-flex mx-2">
